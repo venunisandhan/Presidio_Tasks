@@ -8,7 +8,7 @@ const { register , login , getProfile } = require('../controllers/authController
 const authMiddleware = require('../middlewares/authMiddleware');
 
 
-router.post('/regsiter' , register);
+router.post('/register' , register);
 
 router.post('/login' , login);
 
