@@ -77,7 +77,7 @@ const updateEmployee = async ( req , res , next ) => {
         {
             return res.status(400).json({
                 success: false ,
-                message : `Employee wiht Id ${req.params.id} not found`;
+                message : `Employee wiht Id ${req.params.id} not found` ,
             });
         }
 
@@ -96,7 +96,7 @@ const deleteEmployee = async ( req , res , next ) => {
     
     try
     {
-        const employee = Employee.findByIdAndDelete(req.params.id);
+        const employee = await Employee.findByIdAndDelete(req.params.id);
 
         if(!employee)
         {
