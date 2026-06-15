@@ -1,16 +1,16 @@
 
 const validateEmployee = (req, res, next) =>{
 
-    const {name,email,department,salary} = req.body;
+    const {name,email,department,salary} = req.body || {};
 
-    const error = [];
+    const errors = [];
 
     if(!name || name.trim()==='')
     {
         errors.push('Name is required');
     }
 
-    if(!deparment || department.trim()==='')
+    if(!department || department.trim()==='')
     {
         errors.push('Department is required');
     }
