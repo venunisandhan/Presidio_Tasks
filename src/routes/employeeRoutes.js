@@ -19,7 +19,7 @@ router
       .post(validateEmployee, createEmployee);
 
 router
-      .route('/"id')
+      .route('/:id')
       .get(getEmployeeById)
       .put(validateEmployee, updateEmployee)
       .delete(deleteEmployee);
