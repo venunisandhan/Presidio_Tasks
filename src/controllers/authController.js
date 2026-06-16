@@ -15,7 +15,7 @@ const generateToken = (userId , role) => {
 
 //POST /auth/register
 
-const register = async function ( req , res , next) => {
+const register = async ( req , res , next) => {
 
     try {
         const { name , email , password , role } = req.body || {};
@@ -55,18 +55,18 @@ const register = async function ( req , res , next) => {
     {
         next(error);
     }
-}
+};
 
 // POST /auth/login
 
-const login  = async ( req , res , next) => {
+const login  = async ( req , res , next) => { 
 
     try{
         const {email , password} = req.body ;
 
         if(!email || !password){
             return res.status(400).json({
-                success ; false ,
+                success : false ,
                 message : 'Email and password are required' ,
             });
         }
@@ -80,8 +80,15 @@ const login  = async ( req , res , next) => {
                message : 'Invalid email or password ' ,
             });
         }
+        const isMatch = await user.comparePassword(password);
 
-        const token = generateToken(user._id , user,role);
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid email or password'
+            });
+        }
+        const token = generateToken(user._id , user.role);
 
         res.status(200).json({
             success : true ,
@@ -89,7 +96,7 @@ const login  = async ( req , res , next) => {
             data : {
                 id : user._id ,
                 name : user.name ,
-                email : use.email ,
+                email : user.email ,
                 role : user.role ,
             },
         });
@@ -116,10 +123,10 @@ const getProfile = async (req , res , next ) => {
             createdAt : req.user.createdAt,
             },
         });
-        catch(error)
-        {
-            next(error);
-        }
+    }
+    catch(error)
+    {
+        next(error);
     }
 };
 

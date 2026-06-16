@@ -1,0 +1,55 @@
+
+version : '3.8'
+
+services :
+     
+     app :
+            build : .
+
+            container_name : employee-api-app
+
+            restart : unless-stopped
+
+            ports : 
+                   - "3000:3000"
+
+            env_file : 
+                   - .env
+
+            depends_on : 
+                   - mongo
+            
+            networks :
+                   - employee-network
+            
+            volumes :
+                    - .:/app
+                    - /app/node_modules
+     mongo :
+            
+            image : mongo:6
+
+            container_name : employee-api-mongo
+
+            restart : unless-stopped
+
+            ports :
+                   - "27017:27017"
+            
+            volumes :
+                   - mongo-data:/data/db
+             
+            networks :
+                   - employee-network
+            
+volumes :
+       mongo-data :
+
+networks :
+       employee-network :
+                driver : bridge
+
+
+       
+                   
+

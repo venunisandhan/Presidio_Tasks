@@ -23,4 +23,4 @@ const roleMiddleware = (...allowedRoles) => {
     }
 };
 
-model.exports = roleMiddleware ;
+module.exports = roleMiddleware ;
