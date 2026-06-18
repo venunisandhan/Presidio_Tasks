@@ -45,14 +45,11 @@ async function fetchWeather(
 export function useWeather(latitude: number, longitude: number) {
 
   return useQuery({
-    // Unique key for this query
-    // If key changes, it re-fetches
+
     queryKey: ['weather', latitude, longitude],
     
-    // Function that fetches the data
     queryFn: () => fetchWeather(latitude, longitude),
     
-    // Only fetch if we actually need the data
     enabled: latitude !== 0 && longitude !== 0,
   });
 }
