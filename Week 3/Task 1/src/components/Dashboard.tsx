@@ -1,90 +1,68 @@
-
-
-import { useMemo } from 'react';
-import { useWeatherStore } from '../store/weatherStore';
-import { useWeather } from '../hooks/useWeather';
-import { WeatherCharts } from './WeatherCharts';
-import { AddLocationForm } from './AddLocationForm';
+import { useEffect } from 'react';
+import { useCryptoStore } from '../store/cryptoStore';
+import { useCrypto } from '../hooks/useCrypto';
+import { useTopCoins } from '../hooks/useTopCoins';
+import { CryptoCharts } from './CryptoCharts';
 
 export function Dashboard() {
-  const locations = useWeatherStore((state) => state.locations);
-  const selectedLocationIndex = useWeatherStore(
-    (state) => state.selectedLocationIndex
-  );
-  const selectLocation = useWeatherStore((state) => state.selectLocation);
-  const removeLocation = useWeatherStore((state) => state.removeLocation);
+  const selectedCoinId = useCryptoStore((state) => state.selectedCoinId);
+  const setSelectedCoinId = useCryptoStore((state) => state.setSelectedCoinId);
 
-  const selectedLocation = locations[selectedLocationIndex];
+  const { data: topCoins, isLoading: isLoadingTopCoins } = useTopCoins();
 
-  // Fetch weather for selected location
-  const { data: weatherData, isLoading, error } = useWeather(
-    selectedLocation?.latitude ?? 0,
-    selectedLocation?.longitude ?? 0
-  );
+  useEffect(() => {
+    if (topCoins && topCoins.length > 0 && !selectedCoinId) {
+      setSelectedCoinId(topCoins[0].id);
+    }
+  }, [topCoins, selectedCoinId, setSelectedCoinId]);
+
+  const { data: cryptoData, isLoading: isLoadingCrypto, error } = useCrypto(selectedCoinId);
 
   return (
     <div style={styles.dashboard}>
-      {/* Header */}
       <header style={styles.header}>
-        <h1>🌤️ Weather Dashboard</h1>
+        <div style={styles.headerContent}>
+          <h1>📈 Crypto Dashboard</h1>
+          
+          <div style={styles.selectorContainer}>
+            <label htmlFor="coinSelector" style={styles.label}>Select Coin:</label>
+            <select
+              id="coinSelector"
+              value={selectedCoinId}
+              onChange={(e) => setSelectedCoinId(e.target.value)}
+              disabled={isLoadingTopCoins}
+              style={styles.select}
+            >
+              {isLoadingTopCoins ? (
+                <option value="">Loading...</option>
+              ) : (
+                topCoins?.map((coin) => (
+                  <option key={coin.id} value={coin.id}>
+                    {coin.name} ({coin.symbol.toUpperCase()})
+                  </option>
+                ))
+              )}
+            </select>
+          </div>
+        </div>
       </header>
 
       <div style={styles.container}>
-        {/* Left Sidebar: Form + Location List */}
-        <aside style={styles.sidebar}>
-          <AddLocationForm />
-
-          {/* Locations List */}
-          {locations.length > 0 && (
-            <div style={styles.locationsList}>
-              <h3>Saved Locations</h3>
-              {locations.map((location, index) => (
-                <div
-                  key={index}
-                  style={{
-                    ...styles.locationItem,
-                    backgroundColor:
-                      index === selectedLocationIndex ? '#e3f2fd' : '#fff',
-                    borderLeft:
-                      index === selectedLocationIndex
-                        ? '4px solid #007bff'
-                        : 'none',
-                  }}
-                >
-                  <div
-                    onClick={() => selectLocation(index)}
-                    style={styles.locationName}
-                  >
-                    {location.location}
-                  </div>
-                  <button
-                    onClick={() => removeLocation(index)}
-                    style={styles.removeButton}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </aside>
-
-        {/* Main Content: Charts */}
         <main style={styles.main}>
-          {!selectedLocation ? (
+          {!selectedCoinId ? (
             <div style={styles.placeholder}>
-              <p>Add a location to see weather data</p>
+              <p>Select a coin to see market data</p>
             </div>
-          ) : isLoading ? (
+          ) : isLoadingCrypto ? (
             <div style={styles.placeholder}>
-              <p>Loading weather data...</p>
+              <p>Loading {selectedCoinId} data...</p>
             </div>
           ) : error ? (
             <div style={styles.error}>
               <p>Error: {error.message}</p>
             </div>
-          ) : weatherData ? (
-            <WeatherCharts data={weatherData} />
+          ) : cryptoData ? (
+            <CryptoCharts data={cryptoData} />
           ) : null}
         </main>
       </div>
@@ -103,48 +81,37 @@ const styles = {
     borderBottom: '1px solid #ddd',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
-  container: {
-    display: 'grid',
-    gridTemplateColumns: '300px 1fr',
-    gap: '2rem',
-    padding: '2rem',
-    maxWidth: '1400px',
+  headerContent: {
+    maxWidth: '1200px',
     margin: '0 auto',
-  },
-  sidebar: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '2rem',
-  },
-  locationsList: {
-    backgroundColor: '#fff',
-    padding: '1.5rem',
-    borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  },
-  locationItem: {
-    padding: '1rem',
-    marginBottom: '0.5rem',
-    borderRadius: '4px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    border: '1px solid #ddd',
-    transition: 'all 0.2s ease',
+    flexWrap: 'wrap' as const,
+    gap: '1rem',
   },
-  locationName: {
-    flex: 1,
-    cursor: 'pointer',
-    fontWeight: 500,
+  selectorContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '1rem',
   },
-  removeButton: {
-    backgroundColor: '#ff6b6b',
-    color: 'white',
-    border: 'none',
+  label: {
+    fontWeight: 600,
+    color: '#334155',
+  },
+  select: {
     padding: '0.5rem 1rem',
-    borderRadius: '4px',
+    borderRadius: '6px',
+    border: '1px solid #ccc',
+    fontSize: '1rem',
+    backgroundColor: '#fff',
     cursor: 'pointer',
-    fontSize: '0.875rem',
+    minWidth: '200px',
+  },
+  container: {
+    padding: '2rem',
+    maxWidth: '1200px',
+    margin: '0 auto',
   },
   main: {
     backgroundColor: '#fff',
