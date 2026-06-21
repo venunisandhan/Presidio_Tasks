@@ -3,6 +3,7 @@ import { useCryptoStore } from '../store/cryptoStore';
 import { useCrypto } from '../hooks/useCrypto';
 import { useTopCoins } from '../hooks/useTopCoins';
 import { CryptoCharts } from './CryptoCharts';
+import { PriceAlertForm } from './PriceAlertForm';
 
 export function Dashboard() {
   const selectedCoinId = useCryptoStore((state) => state.selectedCoinId);
@@ -62,7 +63,10 @@ export function Dashboard() {
               <p>Error: {error.message}</p>
             </div>
           ) : cryptoData ? (
-            <CryptoCharts data={cryptoData} />
+            <>
+              <CryptoCharts data={cryptoData} />
+              <PriceAlertForm coinId={selectedCoinId} />
+            </>
           ) : null}
         </main>
       </div>
