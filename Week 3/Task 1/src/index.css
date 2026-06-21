@@ -50,6 +50,44 @@
   }
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+button {
+  font-family: inherit;
+}
+
+button:where(:not(:disabled)) {
+  cursor: pointer;
+}
+
+:disabled {
+  opacity: 0.5;
+}
+
+/* Prevent layout shift from scrollbar */
+html {
+  overflow-y: scroll;
+}
+
+/* Ensure consistent link styling */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 #root {
   width: 1126px;
   max-width: 100%;

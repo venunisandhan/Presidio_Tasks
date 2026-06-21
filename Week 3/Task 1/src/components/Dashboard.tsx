@@ -39,7 +39,7 @@ export function Dashboard() {
               ) : (
                 topCoins?.map((coin) => (
                   <option key={coin.id} value={coin.id}>
-                    {coibn.name} ({coin.symbol.toUpperCase()})
+                    {coin.name} ({coin.symbol.toUpperCase()})
                   </option>
                 ))
               )}
@@ -62,7 +62,7 @@ export function Dashboard() {
             <div style={styles.error}>
               <p>Error: {error.message}</p>
             </div>
-          ) : cryptoDatab ? (
+          ) : cryptoData ? (
             <>
               <CryptoCharts data={cryptoData} />
               <PriceAlertForm coinId={selectedCoinId} />
@@ -95,7 +95,7 @@ const styles = {
     gap: '1rem',
   },
   selectorContainer: {
-    display: 'flex',b
+    display: 'flex',
     alignItems: 'center',
     gap: '1rem',
   },

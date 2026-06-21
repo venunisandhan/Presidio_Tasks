@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useMemo, memo } from 'react';
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -31,16 +31,17 @@ interface CryptoChartsProps {
   data: CryptoData;
 }
 
-export function CryptoCharts({ data }: CryptoChartsProps) {
+const CryptoChartsComponent = memo(function CryptoCharts({ data }: CryptoChartsProps) {
   const lineChartRef = useRef<ChartJS<"line", number[], string>>(null);
   const barChartRef = useRef<ChartJS<"bar", number[], string>>(null);
 
-  const timeLabels = data.prices.map((point) => {
-    const date = new Date(point[0]);
-    return `${date.getMonth() + 1}/${date.getDate()}`;
-  });
+  const timeLabels = useMemo(() => 
+    data.prices.map((point) => {
+      const date = new Date(point[0]);
+      return `${date.getMonth() + 1}/${date.getDate()}`;
+    }), [data.prices]);
 
-  const lineChartData = {
+  const lineChartData = useMemo(() => ({
     labels: timeLabels,
     datasets: [
       {
@@ -67,9 +68,9 @@ export function CryptoCharts({ data }: CryptoChartsProps) {
         fill: true,
       },
     ],
-  };
+  }), [timeLabels, data.prices]);
 
-  const barChartData = {
+  const barChartData = useMemo(() => ({
     labels: timeLabels,
     datasets: [
       {
@@ -89,14 +90,14 @@ export function CryptoCharts({ data }: CryptoChartsProps) {
         hoverBackgroundColor: '#34d399',
       },
     ],
-  };
+  }), [timeLabels, data.total_volumes]);
 
   const commonOptions = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
       mode: 'index' as const,
-      intersect: false,b
+      intersect: false,
     },
     plugins: {
       legend: {
@@ -111,7 +112,7 @@ export function CryptoCharts({ data }: CryptoChartsProps) {
         displayColors: false,
       },
     },
-    scales: {b
+    scales: {
       y: {
         grid: {
           color: 'rgba(0, 0, 0, 0.05)',
@@ -156,7 +157,9 @@ export function CryptoCharts({ data }: CryptoChartsProps) {
       </div>
     </div>
   );
-}
+});
+
+CryptoChartsComponent.displayName = 'CryptoCharts';
 
 const styles = {
   container: {
@@ -185,3 +188,5 @@ const styles = {
     position: 'relative' as const,
   }
 } as const;
+
+export const CryptoCharts = CryptoChartsComponent;

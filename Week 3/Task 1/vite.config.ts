@@ -8,4 +8,28 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('chart.js') || id.includes('react-chartjs-2')) {
+            return 'chartjs';
+          }
+          if (id.includes('@tanstack/react-query')) {
+            return 'react-query';
+          }
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+        },
+      },
+    },
+    cssCodeSplit: true,
+  },
+  server: {
+    headers: {
+      'Cache-Control': 'public, max-age=3600',
+    },
+  },
 })
