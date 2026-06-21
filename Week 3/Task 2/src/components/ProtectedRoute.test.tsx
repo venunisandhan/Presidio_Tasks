@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import { MemoryRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 
 
@@ -13,12 +13,6 @@ vi.mock('../context/AuthContext', () => ({
 
 describe('ProtectedRoute Component', () => {
   it('redirects unauthenticated users to the login page', () => {
-    let testLocation: Location | undefined;
-
-    const LocationCapture = () => {
-      return null;
-    };
-
     const { getByText } = render(
       <MemoryRouter initialEntries={['/protected']}>
         <Routes>
