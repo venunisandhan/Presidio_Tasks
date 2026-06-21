@@ -79,12 +79,8 @@ export const Login: React.FC = () => {
             Sign In
           </button>
         </form>
-        
-        <div className="demo-credentials">
-          <p><strong>Demo Credentials:</strong></p>
-          <p>Admin: <code>admin</code> / <code>admin</code></p>
-          <p>User: <code>user</code> / <code>user</code></p>
-        </div>
+
+
       </div>
     </div>
   );

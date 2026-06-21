@@ -16,7 +16,6 @@ export const Layout: React.FC = () => {
     <div className="app-layout">
       <nav className="navbar">
         <div className="navbar-brand">
-          <Shield className="brand-icon" />
           <span>AuthDemo</span>
         </div>
         

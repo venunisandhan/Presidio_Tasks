@@ -96,7 +96,7 @@ export function CryptoCharts({ data }: CryptoChartsProps) {
     maintainAspectRatio: false,
     interaction: {
       mode: 'index' as const,
-      intersect: false,
+      intersect: false,b
     },
     plugins: {
       legend: {
@@ -111,7 +111,7 @@ export function CryptoCharts({ data }: CryptoChartsProps) {
         displayColors: false,
       },
     },
-    scales: {
+    scales: {b
       y: {
         grid: {
           color: 'rgba(0, 0, 0, 0.05)',
