@@ -6,7 +6,7 @@ const app = express();
 
 app.use(express.json());
 
-const items = [{ id:1 , name : 'Apple' , price : 30}];
+const items = [{{ id:1 , name : 'Apple' , price : 30}];
 let nextID = 2;
 
 app.get('/health', (req,res)=>{
